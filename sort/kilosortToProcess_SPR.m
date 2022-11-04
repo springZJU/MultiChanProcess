@@ -5,7 +5,7 @@ close all; clc; clear;
 % TANKPATH = 'E:\ratNeuroPixel\tankData\rat2\rat2_20220824';
 TANKPATH = 'G:\ECoG\DDZ\ddz20221024';
 MergeFolder = 'Merge1';
-BLOCKNUM = num2cell([1 2 3 6 7 8 9 10 11 12 14 15 16]);
+BLOCKNUM = num2cell([1:12, 14:16]);
 Block = 'Block-1';
 BLOCKPATH = cellfun(@(x) fullfile(TANKPATH,['Block-' num2str(x)]),BLOCKNUM,'UniformOutput',false);
 MERGEPATH = fullfile(TANKPATH,MergeFolder);

@@ -34,7 +34,7 @@ end
 
 %% try to get lfp data
 try
-    data.lfp = buffer.streams.Llfp;
+    data.lfp = ECOGDownsample(buffer.streams.Llfp, 500);
 catch e
     disp(e.message);
 end

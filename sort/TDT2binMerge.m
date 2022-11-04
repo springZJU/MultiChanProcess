@@ -40,7 +40,7 @@ end
 
 blockName = regexpi(BLOCKPATH{1},'Block-\d+','match');
 TANKPATH = erase(BLOCKPATH{1},blockName);
-SAVEPATH = check_mkdir_SPR(TANKPATH,MergeFolder);
+SAVEPATH = check_mkdir(TANKPATH,MergeFolder);
 MERGEFILE = fullfile(SAVEPATH, 'Wave.bin');
 fid2 = fopen(MERGEFILE, 'wb');
 
@@ -121,3 +121,5 @@ fclose(fid2);
 save([SAVEPATH '\mergePara.mat'],'waveLength','BLOCKPATH','SAVEPATH');
 
 end
+
+
