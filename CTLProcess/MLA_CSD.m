@@ -1,11 +1,25 @@
 function MLA_CSD(MATPATH, FIGPATH)
 
 % csd paramters config
-temp = strsplit(MATPATH, "\");
-dateStr = string(temp{end - 1});
-DATAPATH = strcat(MATPATH, "data.mat");
+temp = string(strsplit(MATPATH, "\"));
+if contains(MATPATH, "Block")
+    dateStr = temp(end - 2);
+else
+    dateStr = temp(end - 1);
+end
 CSD_Methods = ["three point", "five point", "kCSD"];
 mkdir(strcat(FIGPATH, dateStr));
+
+[badCh, dz] = CSD_Config(MATPATH);
+
+% get lfp and wave data
+[trialAll, LFPDataset] = CSD_Preprocess(MATPATH);
+trialAll(1) = [];
+[~, WAVEDataset] = MUA_Preprocess(MATPATH);
+window = [-100 500];
+selWin = [-20 , 150];
+trialsLFP = selectEcog(LFPDataset, trialAll, "trial onset", window);
+trialsWAVE = selectEcog(WAVEDataset, trialAll, "trial onset", window);
 
 for mIndex = 1 : length(CSD_Methods)
 
@@ -14,16 +28,6 @@ for mIndex = 1 : length(CSD_Methods)
     if exist(strcat(FIGNAME, ".jpg"), "file")
         continue
     end
-    [badCh, dz] = CSD_Config(MATPATH);
-
-    % get lfp and wave data
-    [trialAll, LFPDataset] = CSD_Preprocess(DATAPATH);
-    trialAll(1) = [];
-    [~, WAVEDataset] = MUA_Preprocess(DATAPATH);
-    window = [-100 500];
-    selWin = [-20 , 150];
-    trialsLFP = selectEcog(LFPDataset, trialAll, "trial onset", window);
-    trialsWAVE = selectEcog(WAVEDataset, trialAll, "trial onset", window);
 
     % compute CSD and MUA
     [CSD, LFP] = CSD_Process(trialsLFP, window, CSD_Method, badCh, dz);

@@ -51,11 +51,10 @@ scaleAxes(Axes, "c", [-max(abs(cRange)), max(max(cRange))]);
 csdYTick = linspace(1, size(CSD.Data, 1), length(CSD.Chs));
 set(Axes, "ytick", csdYTick);
 set(Axes, "yticklabel", string(num2cell(flip(CSD.Chs))'));
-title(Axes, "CSD (Current Source Density) uv/mm2");
+
 colorbar
 
 % plot MUA Wave
-% Axes = mSubplot(Fig, 1, 4, 3, [1, 1], margins, paddingCSD);
 tIndex = MUA.tWave >= selWin(1) & MUA.tWave <= selWin(2);
 waveTemp = MUA.Wave(CSD.Boundary+1 : end-CSD.Boundary, tIndex);
 waveTemp = waveTemp - repmat(mean(waveTemp, 2), 1, size(waveTemp, 2));
@@ -63,7 +62,7 @@ adds = repmat(flip(csdYTick)', 1, size(waveTemp, 2));
 scaleFactor = ceil(0.8 * max([max(max(abs(diff(waveTemp, 1, 1)))), unique(diff(csdYTick))])) / max(max(waveTemp));
 temp = waveTemp * scaleFactor + adds;
 plot(MUA.tWave(tIndex), temp, "k-", "LineWidth", 1); hold on
-title(Axes, "MUA (Multi Unit Acitivity)");
+title(Axes, "CSD (uv/mm2) & MUA");
 
 %% plot MUA Image
 Axes = mSubplot(Fig, 1, 4, 4, [1, 1], margins, paddings);
@@ -73,7 +72,7 @@ colormap(Axes, "hot");
 ylim([1, size(MUA.Data, 1)]);
 xlim(selWin);
 cRange = scaleAxes(Axes, "c");
-scaleAxes(Axes, "c", [0.3, 1] * cRange(2));
+scaleAxes(Axes, "c", [0.4, 1] * cRange(2));
 
 set(Axes, "ytick", linspace(1, size(MUA.Data, 1), length(MUA.Chs)));
 set(Axes, "yticklabel", string(num2cell(flip(MUA.Chs))'));

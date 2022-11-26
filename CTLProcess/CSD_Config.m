@@ -13,8 +13,13 @@ Date = Date(1);
 
 BLOCKPATH = string({recordInfo.BLOCKPATH})';
 dIndex = contains(BLOCKPATH, Date);
-badCh = unique([recordInfo(dIndex).badChannel]);
-dz = unique([recordInfo(dIndex).dz])/1000;
+if any(dIndex)
+    badCh = unique([recordInfo(dIndex).badChannel]);
+    dz = unique([recordInfo(dIndex).dz])/1000;
+else
+    badCh = 9;
+    dz = 0.15;
+end
 return
 end
 
