@@ -31,6 +31,7 @@ scaleAxes(Axes, "c", [-max(abs(cRange)), max(max(cRange))]);
 set(Axes, "ytick", linspace(1, size(LFP.Data, 1), length(LFP.Chs)));
 set(Axes, "yticklabel", string(num2cell(flip(LFP.Chs))'));
 title(Axes, "LFP Color Map");
+colorbar
 
 %% plot CSD and corresponding MUA wave
 vertSeg = (1 - sum(paddings(3 : 4))) / (length(LFP.Chs) - 1);
@@ -51,18 +52,19 @@ scaleAxes(Axes, "c", [-max(abs(cRange)), max(max(cRange))]);
 csdYTick = linspace(1, size(CSD.Data, 1), length(CSD.Chs));
 set(Axes, "ytick", csdYTick);
 set(Axes, "yticklabel", string(num2cell(flip(CSD.Chs))'));
-
 colorbar
 
 % plot MUA Wave
 tIndex = MUA.tWave >= selWin(1) & MUA.tWave <= selWin(2);
 waveTemp = MUA.Wave(CSD.Boundary+1 : end-CSD.Boundary, tIndex);
-waveTemp = waveTemp - repmat(mean(waveTemp, 2), 1, size(waveTemp, 2));
+scaleFactor = 0.8* unique(diff(csdYTick)) / max(max(waveTemp, [], 2) - min(waveTemp, [], 2));
+waveTemp = scaleFactor * waveTemp;
+waveTemp = waveTemp - repmat(min(waveTemp ,[], 2), 1, size(waveTemp, 2));
 adds = repmat(flip(csdYTick)', 1, size(waveTemp, 2));
-scaleFactor = ceil(0.8 * max([max(max(abs(diff(waveTemp, 1, 1)))), unique(diff(csdYTick))])) / max(max(waveTemp));
-temp = waveTemp * scaleFactor + adds;
+temp = waveTemp  + adds;
 plot(MUA.tWave(tIndex), temp, "k-", "LineWidth", 1); hold on
 title(Axes, "CSD (uv/mm2) & MUA");
+colorbar;
 
 %% plot MUA Image
 Axes = mSubplot(Fig, 1, 4, 4, [1, 1], margins, paddings);
@@ -72,12 +74,12 @@ colormap(Axes, "hot");
 ylim([1, size(MUA.Data, 1)]);
 xlim(selWin);
 cRange = scaleAxes(Axes, "c");
-scaleAxes(Axes, "c", [0.4, 1] * cRange(2));
-
+scaleAxes(Axes, "c", [0, 0.9] * cRange(2));
+% scaleAxes(Axes, "c", [0, 1]);
 set(Axes, "ytick", linspace(1, size(MUA.Data, 1), length(MUA.Chs)));
 set(Axes, "yticklabel", string(num2cell(flip(MUA.Chs))'));
 title(Axes, "MUA Color Map");
-
+colorbar
 
 %% add onset line
 lines.X = 0;
