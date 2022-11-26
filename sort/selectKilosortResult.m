@@ -1,6 +1,6 @@
 clear; clc
 
-TANKPATH = 'G:\ECoG\DDZ\ddz20221021';
+TANKPATH = 'G:\ECoG\DD\dd20221124';
 % Block = 'Block-6';
 % data = TDTbin2mat(fullfile(TANKPATH,Block),'TYPE',{'EPOCS'});
 % display(['the first sound of ' Block 'is: '  num2str(data.epocs.ordr.onset(1))]);
@@ -11,11 +11,11 @@ load (fullfile(MERGEPATH,'mergePara.mat'));
 chAll = 16;
 fs = 12207.031250;
 
-savePath = fullfile(MERGEPATH, 'th7_6');
-ch = [1	2	3	4	6	7	207	8 8	9	10	11	13	14] ; % channels index of kilosort, that means chKs = chTDT - 1;
-idx = {1	0	2	3	6	5	7	4 9	10	8	11	12	13};
+NPYPATH = fullfile(MERGEPATH, 'th7_6');
+idx = [1:10, 12] ;
+ch = [1, 3, 5, 6, 8, 9, 10, 14, 12, 13, 15]; % channels index of kilosort, that means chKs = chTDT - 1;
+
 kiloSpikeAll = cell(max([chAll ch]),1);
-NPYPATH = savePath;
 
 [spikeIdx, clusterIdx, templates, spikeTemplateIdx] = parseNPY(NPYPATH);
 
@@ -25,11 +25,8 @@ Fig = figure;
 maximizeFig(Fig);
 plotIdx = 0;
 for chN = 1:length(ch)
-%     kiloClusters = input(['Input clusters of channel ', num2str(chN), ': ']);
-    kiloClusters = idx{chN};
-
+    kiloClusters = idx(chN);
     kiloSpikeTimeIdx = [];
-    
     for index = 1:length(kiloClusters)
         kiloSpikeTimeIdx = [kiloSpikeTimeIdx; spikeIdx(clusterIdx == kiloClusters(index))];
         plotIdx = plotIdx + 1; 
@@ -44,8 +41,8 @@ for chN = 1:length(ch)
     kiloSpikeTime = double(kiloSpikeTimeIdx - 1) / fs;
     kiloSpikeAll{ch(chN)+1} = [kiloSpikeTime ch(chN)*ones(length(kiloSpikeTime),1)];
 end
-saveas(Fig,[savePath  '\cluster templates.jpg']);
-save([savePath, '\selectCh.mat'], 'ch', 'idx', '-mat');
+saveas(Fig,[NPYPATH  '\cluster templates.jpg']);
+save([NPYPATH, '\selectCh.mat'], 'ch', 'idx', '-mat');
 
 %% split sort data into different blocks
 T = cellfun(@sum,waveLength);
@@ -60,14 +57,24 @@ sortdataBuffer = cell2mat(kiloSpikeAll);
 [~,selectIdx] = findWithinInterval(sortdataBuffer(:,1),t);
 sortdata = sortdataBuffer(selectIdx,:);
 sortdata(:,1) = sortdata(:,1) - t(1);
-save([BLOCKPATH{blks} '\sortdata.mat'], 'sortdata');
+
+onsetIdx = ceil(t(1) * fs);
+wfWin = [-30, 30];
+IDandCHANNEL = [idx; zeros(1, length(idx)); ch]';
+disp(strcat("Processing blocks (", num2str(blks), "/", num2str(length(BLOCKPATH)), ") ..."));
+spkWave = getWaveForm_singleID_v2(fs, BLOCKPATH{blks}, NPYPATH, idx, IDandCHANNEL, wfWin, onsetIdx);
+save([BLOCKPATH{blks} '\sortdata.mat'], 'sortdata', 'spkWave');
 end
 
 
 %% update recording excel
 [mPath,mName]=fileparts(mfilename('fullpath'));
 cd(mPath);
-recordPath = "..\utils\LinearArrayRecording.xlsx";
+if contains(TANKPATH, "DDZ")
+    recordPath = "..\utils\MLA_New_DDZ_Recording.xlsx";
+elseif contains(TANKPATH, "DD")
+    recordPath = "..\utils\MLA_New_DD_Recording.xlsx";
+end
 recordInfo = table2struct(readtable(recordPath));
 changeIdx = find(matches({recordInfo.BLOCKPATH}', BLOCKPATH'));
 for i = changeIdx'
@@ -76,8 +83,6 @@ for i = changeIdx'
     recordInfo(i).ks_ID = strjoin(string(idx), ",");
 end
 writetable(struct2table(recordInfo), recordPath);
-
-
 
 
 

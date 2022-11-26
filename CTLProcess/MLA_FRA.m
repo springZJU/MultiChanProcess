@@ -6,6 +6,9 @@ dateStr = string(temp{end - 1});
 DATAPATH = strcat(MATPATH, "data.mat");
 FIGPATH = strcat(FIGPATH, dateStr, "\");
 
+if exist(FIGPATH, "dir")
+    return
+end
 %% plot FRA
 [Fig, ch] = sFRA(DATAPATH);
 

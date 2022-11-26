@@ -1,6 +1,8 @@
 clear; clc;
-rootPathMat = "E:\MonkeyLinearArray\MAT Data\DDZ\ClickTrainLongTerm\";
-rootPathFig = "E:\MonkeyLinearArray\Figure\ClickTrainLongTerm\";
+monkeyName = "DD";
+rootPathMat = strcat("E:\MonkeyLinearArray\MAT Data\", monkeyName, "\ClickTrainLongTerm\");
+rootPathFig = "E:\MonkeyLinearArray\Figure\CTL_New\";
+recordPath = strcat(fileparts(fileparts(mfilename("fullpath"))), "\utils\MLA_New_", monkeyName, "_Recording.xlsx");
 
 %% set protocols
 temp = dir(rootPathMat);
@@ -9,7 +11,7 @@ protocols = string({temp.name}');
 
 %% select data
 dateSel = "";
-protSel = "BF_CSD_Nice";
+protSel = "";
 
 for rIndex = 1 : length(protocols)
 
@@ -18,25 +20,33 @@ for rIndex = 1 : length(protocols)
 
     temp = dir(protPathMat);
     temp(ismember(string({temp.name}'), [".", ".."])) = [];
-    
-    MATPATH = cellfun(@(x) string([char(protPathMat), x, '\']), {temp.name}', "UniformOutput", false);
     FIGPATH = strcat(rootPathFig, protocolStr, "\");
 
-    indSel = all(cell2mat([cellfun(@(x) contains(x, dateSel), MATPATH, "uni", false), cellfun(@(x) contains(x, protSel), MATPATH, "uni", false)]), 2);
-    MATPATH = MATPATH(indSel);
+    MATPATH = cellfun(@(x) string([char(protPathMat), x, '\']), {temp.name}', "UniformOutput", false);
+    MATPATH = MATPATH( contains(string(MATPATH), dateSel) & contains(string(MATPATH), protSel) );
+    %     [MATPATH, recordInfo, excelIdx] = selUnprocessedMat(MATPATH, recordPath);
 
     for mIndex = 1 : length(MATPATH)
+
         if strcmp(protocolStr, "Noise")
-            %         MLA_Noise(MATPATH{mIndex}, FIGPATH);
+            % MLA_Noise(MATPATH{mIndex}, FIGPATH);
             continue
         elseif strcmp(protocolStr, "BF_CSD_Nice")
             MLA_CSD(MATPATH{mIndex}, FIGPATH);
 %             continue
-        elseif strcmp(protocolStr, "Tone_CF")
+        elseif matches(protocolStr, ["ToneCF", "Tone_Prior_CF"])
             MLA_FRA(MATPATH{mIndex}, FIGPATH);
-        else
-%             clickTrainLongTermProcess(MATPATH{mIndex}, FIGPATH);
-            continue;
+
+        elseif MLA_IsCTLProt(protocolStr) % click train longterm
+            try
+                MLA_ClickTrainProcess(MATPATH{mIndex}, FIGPATH);
+            catch e
+                disp(e.message);
+                continue;
+            end
         end
+        %         recordInfo(excelIdx(mIndex)).processed = 1;
     end
+
+    %     writetable(struct2table(recordInfo), recordPath);
 end

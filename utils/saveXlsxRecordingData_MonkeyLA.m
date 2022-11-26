@@ -6,7 +6,6 @@ paradigm = recordInfo(idx).paradigm;
 temp = strsplit(BLOCKPATH, "\");
 animalID = temp{end - 2};
 dateStr = temp{end - 1};
-soundFold = recordInfo(idx).sounds;
 
 buffer=TDTbin2mat(BLOCKPATH);  %spike store name should be changed according to your real name
 %% try to get epocs
@@ -24,6 +23,7 @@ catch e
 end
 
 %% try to get sort data
+% sort data
 SORTPATH = fullfile(BLOCKPATH, "sortdata.mat");
 try
     load(SORTPATH);
@@ -32,6 +32,12 @@ catch e
     disp(e.message);
 end
 
+% spike waveform
+try
+    data.spkWave = spkWave;
+catch e
+    disp(e.message);
+end
 %% try to get lfp data
 try
     data.lfp = ECOGDownsample(buffer.streams.Llfp, 500);
@@ -56,14 +62,13 @@ params.sitePos = sitePos;
 params.depth = depth;
 params.animalID = animalID;
 params.dateStr = dateStr;
-params.soundFold = soundFold;
 data.params = params;
 
 %% export result
 SAVEPATH = strcat("E:\MonkeyLinearArray\MAT Data\", animalID, "\ClickTrainLongTerm\", paradigm, "\", dateStr, "_", sitePos);
 mkdir(SAVEPATH);
 save(fullfile(SAVEPATH, "data.mat"), "data", "-mat");
-recordInfo(idx).processed = 1;
+recordInfo(idx).exported = 1;
 
 writetable(struct2table(recordInfo), recordPath);
 end

@@ -1,10 +1,21 @@
-switch dateStr
-    case "ddz20221019_A51L13"
-        badCh = 13;
-    case "ddz20221020_A51L18"
-        badCh = 13;
-    case "ddz20221021_A51L7"
-        badCh = 13;
-    case "ddz20221022_A56L15"
-        badCh = 9;
+function [badCh, dz] = CSD_Config(MATPATH)
+if contains(MATPATH, "DDZ")
+    recordPath = strcat(fileparts(fileparts(mfilename("fullpath"))), "\utils\MLA_New_DDZ_Recording.xlsx");
+elseif contains(MATPATH, "DD")
+    recordPath = strcat(fileparts(fileparts(mfilename("fullpath"))), "\utils\MLA_New_DD_Recording.xlsx");
 end
+recordInfo = table2struct(readtable(recordPath));
+
+temp = strsplit(MATPATH, "\");
+dateStr = string(temp{end - 1});
+Date = string(strsplit(dateStr, "_"));
+Date = Date(1);
+
+BLOCKPATH = string({recordInfo.BLOCKPATH})';
+dIndex = contains(BLOCKPATH, Date);
+badCh = unique([recordInfo(dIndex).badChannel]);
+dz = unique([recordInfo(dIndex).dz])/1000;
+return
+end
+
+
