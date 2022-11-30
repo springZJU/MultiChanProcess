@@ -4,7 +4,7 @@ function [CSD, LFP] = CSD_Process(trialsLFP, window, varargin)
 mInputParser = inputParser;
 mInputParser.addRequired("trialsLFP");
 mInputParser.addRequired("window");
-mInputParser.addOptional("CSD_Method", "five point", @(x) any(validatestring(x, {'five point','three point', 'kCSD'})));
+mInputParser.addOptional("CSD_Method", "kCSD", @(x) any(validatestring(x, {'five point','three point', 'kCSD'})));
 mInputParser.addOptional("badCh", [], @(x) validateattributes(x, {'numeric'}, "2d"));
 mInputParser.addOptional("dz", 150, @(x) validateattributes(x, {'numeric'}, {'numel', 1}));
 

@@ -3,7 +3,7 @@ close all; clc; clear;
 
 %% generate .bin file
 % TANKPATH = 'E:\ratNeuroPixel\tankData\rat2\rat2_20220824';
-TANKPATH = 'G:\ECoG\DD\dd20221124';
+TANKPATH = 'G:\ECoG\DD\dd20221129';
 MergeFolder = 'Merge1';
 BLOCKNUM = num2cell([4:6, 8:20]);
 Block = 'Block-1';

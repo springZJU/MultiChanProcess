@@ -1,6 +1,7 @@
 clear; clc;
+warning("off");
 monkeyName = "DD";
-rootPathMat = strcat("E:\MonkeyLinearArray\MAT Data\", monkeyName, "\ClickTrainLongTerm\");
+rootPathMat = strcat("E:\MonkeyLinearArray\MAT Data\", monkeyName, "\CTL_New\");
 rootPathFig = "E:\MonkeyLinearArray\Figure\CTL_New\";
 recordPath = strcat(fileparts(fileparts(mfilename("fullpath"))), "\utils\MLA_New_", monkeyName, "_Recording.xlsx");
 
@@ -42,6 +43,7 @@ for rIndex = 1 : length(protocols)
                 MLA_ClickTrainProcess(MATPATH{mIndex}, FIGPATH);
             catch e
                 disp(e.message);
+                e.stack(1)
                 continue;
             end
         end

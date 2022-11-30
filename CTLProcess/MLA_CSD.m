@@ -8,7 +8,13 @@ else
     dateStr = temp(end - 1);
 end
 
+
+
+
 CSD_Methods = ["three point", "five point", "kCSD"];
+if all(cellfun(@(x) exist(strcat(FIGPATH, dateStr, "\", x, '.jpg'), "file"), CSD_Methods, "uni", false));
+    return
+end
 [badCh, dz] = CSD_Config(MATPATH);
 
 % get lfp and wave data
@@ -20,7 +26,7 @@ selWin = [-20 , 150];
 trialsLFP = selectEcog(LFPDataset, trialAll, "trial onset", window);
 trialsWAVE = selectEcog(WAVEDataset, trialAll, "trial onset", window);
 
-mkdir(strcat(FIGPATH, dateStr));
+
 for mIndex = 1 : length(CSD_Methods)
 
     CSD_Method = CSD_Methods(mIndex);
@@ -28,6 +34,7 @@ for mIndex = 1 : length(CSD_Methods)
     if exist(strcat(FIGNAME, ".jpg"), "file")
         continue
     end
+    mkdir(strcat(FIGPATH, dateStr));
 
     % compute CSD and MUA
     [CSD, LFP] = CSD_Process(trialsLFP, window, CSD_Method, badCh, dz);

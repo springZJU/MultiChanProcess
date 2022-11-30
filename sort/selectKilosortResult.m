@@ -1,6 +1,6 @@
 clear; clc
 
-TANKPATH = 'G:\ECoG\DD\dd20221124';
+TANKPATH = 'G:\ECoG\DD\dd20221129';
 % Block = 'Block-6';
 % data = TDTbin2mat(fullfile(TANKPATH,Block),'TYPE',{'EPOCS'});
 % display(['the first sound of ' Block 'is: '  num2str(data.epocs.ordr.onset(1))]);
@@ -12,8 +12,8 @@ chAll = 16;
 fs = 12207.031250;
 
 NPYPATH = fullfile(MERGEPATH, 'th7_6');
-idx = [1:10, 12] ;
-ch = [1, 3, 5, 6, 8, 9, 10, 14, 12, 13, 15]; % channels index of kilosort, that means chKs = chTDT - 1;
+idx = [0, 1, 3, 4, 5, 6, 8, 9, 12, 13, 14, 17, 18, ] ;
+ch = [1, 0, 1001, 3, 2, 5, 7, 6, 8, 11, 10, 12, 1012]; % channels index of kilosort, that means chKs = chTDT - 1;
 
 kiloSpikeAll = cell(max([chAll ch]),1);
 
@@ -60,7 +60,7 @@ sortdata(:,1) = sortdata(:,1) - t(1);
 
 onsetIdx = ceil(t(1) * fs);
 wfWin = [-30, 30];
-IDandCHANNEL = [idx; zeros(1, length(idx)); ch]';
+IDandCHANNEL = [idx; zeros(1, length(idx)); mod(ch, 1000)]';
 disp(strcat("Processing blocks (", num2str(blks), "/", num2str(length(BLOCKPATH)), ") ..."));
 spkWave = getWaveForm_singleID_v2(fs, BLOCKPATH{blks}, NPYPATH, idx, IDandCHANNEL, wfWin, onsetIdx);
 save([BLOCKPATH{blks} '\sortdata.mat'], 'sortdata', 'spkWave');

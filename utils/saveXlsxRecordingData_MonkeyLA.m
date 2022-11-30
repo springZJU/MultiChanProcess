@@ -1,4 +1,5 @@
 function saveXlsxRecordingData_MonkeyLA(recordInfo, idx, recordPath)
+e = [];
 BLOCKPATH = recordInfo(idx).BLOCKPATH;
 sitePos = recordInfo(idx).sitePos;
 depth = recordInfo(idx).depth;
@@ -65,10 +66,15 @@ params.dateStr = dateStr;
 data.params = params;
 
 %% export result
-SAVEPATH = strcat("E:\MonkeyLinearArray\MAT Data\", animalID, "\ClickTrainLongTerm\", paradigm, "\", dateStr, "_", sitePos);
+if contains(paradigm, ["PEOdd7-10_Active", "PEOdd7-10_Passive"])
+    SAVEPATH = strcat("E:\MonkeyLinearArray\MAT Data\", animalID, "\PEOdd_Behavior\", paradigm, "\", dateStr, "_", sitePos);
+else
+    SAVEPATH = strcat("E:\MonkeyLinearArray\MAT Data\", animalID, "\CTL_New\", paradigm, "\", dateStr, "_", sitePos);
+end
 mkdir(SAVEPATH);
 save(fullfile(SAVEPATH, "data.mat"), "data", "-mat");
 recordInfo(idx).exported = 1;
-
-writetable(struct2table(recordInfo), recordPath);
+if isempty(e)
+    writetable(struct2table(recordInfo), recordPath);
+end
 end

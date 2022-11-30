@@ -1,19 +1,24 @@
-function Fig = MLA_PlotLfpByCh(trialsLfpByCh, window, stimStr)    
+function Fig = MLA_PlotLfpByCh(chAll, CTLParams)   
+
+CTLFields = string(fields(CTLParams));
+for fIndex = 1 : length(CTLFields)
+    eval(strcat(CTLFields(fIndex), "= CTLParams.", CTLFields(fIndex), ";"));
+end
+chNum = length(chAll(1).chLFP);
+
 margins = [0.05, 0.05, 0, 0];
 paddings = [0.01, 0.03, 0.03, 0.03];
 Fig = figure;
 maximizeFig(Fig);
-shank1 = (1:16)';
-chNum = length(shank1);
-axesMap = reshape(1 : chNum * length(trialsLfpByCh), [length(trialsLfpByCh), chNum]);
+axesMap = reshape(1 : chNum * length(chAll), [length(chAll), chNum]);
 
-for dIndex = 1 : length(trialsLfpByCh)
+for dIndex = 1 : length(chAll)
     for cIndex = 1 : chNum
         %% whole time lfp wave
         % shank1
-        Axes = mSubplot(Fig, chNum,  length(trialsLfpByCh), axesMap(dIndex, cIndex), [1, 1], margins, paddings);
-        temp = mean(trialsLfpByCh{dIndex, 1}{shank1(cIndex), 1});
-        t = linspace(window(1), window(2), size(temp, 2));
+        Axes = mSubplot(Fig, chNum,  length(chAll), axesMap(dIndex, cIndex), [1, 1], margins, paddings);
+        t = chAll(dIndex).chLFP(cIndex).Wave(:, 1);
+        temp = chAll(dIndex).chLFP(cIndex).Wave(:, 2);
         plot(Axes, t, temp, "Color", "red", "LineStyle", "-", "LineWidth", 1.5); hold on;
         xlim([t(1), t(end)]);
         if cIndex == 1

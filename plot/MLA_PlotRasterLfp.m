@@ -1,5 +1,6 @@
 function Fig = MLA_PlotRasterLfp(chSpikeLfp, window, stimStr)
 
+
 colMax = length(chSpikeLfp);
 chNum = length(chSpikeLfp(1).spikeLfp);
 
