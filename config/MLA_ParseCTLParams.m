@@ -9,6 +9,7 @@ mProtocol = configTable(matches({configTable.paradigm}', protStr));
 CTLParams.fs = 500;
 CTLParams.S1Duration = str2double(string(strsplit(mProtocol.S1Duration, ",")));
 CTLParams.Window = str2double(string(strsplit(mProtocol.Window, ",")));
+CTLParams.selWin = str2double(string(strsplit(mProtocol.selWin, ",")));
 CTLParams.Offset = str2double(string(strsplit(mProtocol.Offset, ",")));
 CTLParams.stimStr = strrep(string(strsplit(mProtocol.trialTypes, ",")), "_", "-");
 CTLParams.colors = string(strsplit(mProtocol.colors, ","));

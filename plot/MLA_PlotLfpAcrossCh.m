@@ -27,9 +27,7 @@ for dIndex = 1 : length(chAll)
         if mod(dIndex, ceil(length(chAll)/plotRows)) ~= 1
             set(gca, 'yticklabel', '');
         end
-        tIndex = find(t > compareWin(1) & t < compareWin(2));
-        ymax = max([ymax; temp(tIndex)]);
-        ymin = min([ymin; temp(tIndex)]);
+
     end
     %     legend;
 end
@@ -41,7 +39,6 @@ lines(1).X = 0;
 lines(1).color = "black";
 addLines2Axes(Fig, lines);
 
-scaleAxes(Fig, "y", [ymin, ymax]);
 
 %% legend
 AxesLegend = subplot('position', [0.02, 0.95, 0.95, 0.04]);

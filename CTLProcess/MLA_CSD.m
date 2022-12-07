@@ -12,10 +12,10 @@ end
 
 
 CSD_Methods = ["three point", "five point", "kCSD"];
-if all(cellfun(@(x) exist(strcat(FIGPATH, dateStr, "\", x, '.jpg'), "file"), CSD_Methods, "uni", false));
+if all(cellfun(@(x) exist(strcat(FIGPATH, dateStr, "\", x, '.jpg'), "file"), CSD_Methods, "uni", false))
     return
 end
-[badCh, dz] = CSD_Config(MATPATH);
+[badCh, dz] = MLA_CSD_Config(MATPATH);
 
 % get lfp and wave data
 [trialAll, LFPDataset] = CSD_Preprocess(MATPATH);

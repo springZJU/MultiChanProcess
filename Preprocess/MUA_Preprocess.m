@@ -17,10 +17,11 @@ try
 catch e
     disp(e.message);
     disp("Try loading data from TDT BLOCK...");
-    temp = TDTbin2mat(char(MATPATH), 'TYPE', {'epocs'});
+    BLOCKPATH = MLA_GetMatBlock(MATPATH);
+    temp = TDTbin2mat(char(BLOCKPATH), 'TYPE', {'epocs'});
     epocs = temp.epocs;
     trialAll = processFcn(epocs);
-    temp = TDTbin2mat(char(MATPATH), 'TYPE', {'streams'});
+    temp = TDTbin2mat(char(BLOCKPATH), 'TYPE', {'streams'}, 'STORE', 'Wave');
     streams = temp.streams;
     WaveDataset = streams.Wave;
 end

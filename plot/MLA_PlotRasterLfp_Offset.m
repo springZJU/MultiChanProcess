@@ -19,8 +19,8 @@ end
 for cIndex = 1 : chNum
     Fig(cIndex) = figure;
     maximizeFig(Fig(cIndex));
-    margins = [0.05, 0.05, 0.1, 0.1];
-    paddings = [0.01, 0.03, 0.1, 0.01];
+    margins = [0.05, 0.05, 0.12, 0.1];
+    paddings = [0.01, 0.03, 0.05, 0.01];
 
     for dIndex = 1 : colMax
 
@@ -68,7 +68,7 @@ for cIndex = 1 : chNum
     compareGroupN = length(Compare_Index);
     for pIndex = 1 : compareGroupN
         posIndex = nGeneral * compareCol + pIndex;
-        AxesPSTH(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, PSTH_CompareSize, margins, paddings);
+        AxesPSTH(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, PSTH_CompareSize, margins, paddings, "alignment", "top-left");
         idxs = Compare_Index{pIndex, 1};
         for dIndex = 1 : length(idxs)
             X = psthTemp{idxs(dIndex), 1}(:, 1);
@@ -87,7 +87,7 @@ for cIndex = 1 : chNum
     for pIndex = 1 : compareGroupN
         compareIdx = pIndex + compareGroupN * PSTH_CompareSize(1);
         posIndex = nGeneral * compareCol + compareIdx;
-        AxesLFP(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, LFP_CompareSize, margins, paddings);
+        AxesLFP(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, LFP_CompareSize, margins, paddings, "alignment", "top-left");
         idxs = Compare_Index{pIndex, 1};
         for dIndex = 1 : length(idxs)
             X = lfpTemp{idxs(dIndex), 1}(:, 1);
@@ -113,16 +113,16 @@ for cIndex = 1 : chNum
     addLines2Axes(AxesPSTH, lines);
 
     %% scale
-    for rIndex = 1 : nGeneral
-        scaleAxes(Axes(:, rIndex), "y");
-    end
     for rIndex = 1 : 3
         scaleAxes(Axes(:, rIndex), "x", plotWin);
     end
-    scaleAxes(AxesPSTH, "y");
-    scaleAxes(AxesLFP, "y");
+    for rIndex = 1 : nGeneral
+        scaleAxes(Axes(:, rIndex), "y");
+    end
     scaleAxes(AxesPSTH, "x", compareWin);
     scaleAxes(AxesLFP, "x", compareWin);
+    scaleAxes(AxesPSTH, "y", scaleAxes(AxesPSTH, "y"));
+    scaleAxes(AxesLFP, "y", scaleAxes(AxesLFP, "y"));
 
     %% Rayleigh statistics
     compareIdx = compareGroupN * (PSTH_CompareSize(1) + LFP_CompareSize(1)) + 1;
@@ -130,7 +130,7 @@ for cIndex = 1 : chNum
         RS(dIndex, 1) = chSpikeLfp(dIndex).chSPK(cIndex).chRS;
     end
     posIndex = nGeneral * compareCol + compareIdx;
-    AxesRS(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, [compareCol-compareIdx+ 1, LFP_CompareSize(2)], margins, paddings);
+    AxesRS(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, [compareCol-compareIdx+ 1, LFP_CompareSize(2)], margins, paddings, "alignment", "top-left");
     plot(1 : colMax, RS, "r-", "LineWidth", 2); hold on;
     scatter(1 : colMax, RS, 20, "red", "filled"); hold on
     plot([1, colMax], [13.8, 13.8], "b--"); hold on

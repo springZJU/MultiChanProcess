@@ -1,4 +1,4 @@
-function [badCh, dz] = CSD_Config(MATPATH)
+function [badCh, dz] = MLA_CSD_Config(MATPATH)
 if contains(MATPATH, "DDZ")
     recordPath = strcat(fileparts(fileparts(mfilename("fullpath"))), "\utils\MLA_New_DDZ_Recording.xlsx");
 elseif contains(MATPATH, "DD")
@@ -15,6 +15,9 @@ BLOCKPATH = string({recordInfo.BLOCKPATH})';
 dIndex = contains(BLOCKPATH, Date);
 if any(dIndex)
     badCh = unique([recordInfo(dIndex).badChannel]);
+    if badCh <= 0
+        badCh = [];
+    end
     dz = unique([recordInfo(dIndex).dz])/1000;
 else
     badCh = 9;

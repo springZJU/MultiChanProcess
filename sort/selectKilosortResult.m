@@ -1,9 +1,7 @@
 clear; clc
+TANKPATH = 'G:\ECoG\DDZ\ddz20221206';
+% TANKPATH = 'G:\ECoG\DD\dd20221130';
 
-TANKPATH = 'G:\ECoG\DD\dd20221129';
-% Block = 'Block-6';
-% data = TDTbin2mat(fullfile(TANKPATH,Block),'TYPE',{'EPOCS'});
-% display(['the first sound of ' Block 'is: '  num2str(data.epocs.ordr.onset(1))]);
 
 %% 
 MERGEPATH = check_mkdir(TANKPATH,'Merge1');
@@ -12,8 +10,8 @@ chAll = 16;
 fs = 12207.031250;
 
 NPYPATH = fullfile(MERGEPATH, 'th7_6');
-idx = [0, 1, 3, 4, 5, 6, 8, 9, 12, 13, 14, 17, 18, ] ;
-ch = [1, 0, 1001, 3, 2, 5, 7, 6, 8, 11, 10, 12, 1012]; % channels index of kilosort, that means chKs = chTDT - 1;
+ch =  [1, 3, 5, 7, 9, 11, 13, 15]; % channels index of kilosort, that means chKs = chTDT - 1;
+idx = [0, 1, 2, 3, 4, 5, 6, 7] ;
 
 kiloSpikeAll = cell(max([chAll ch]),1);
 

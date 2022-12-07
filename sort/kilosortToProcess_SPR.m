@@ -2,10 +2,10 @@ close all; clc; clear;
 
 
 %% generate .bin file
-% TANKPATH = 'E:\ratNeuroPixel\tankData\rat2\rat2_20220824';
-TANKPATH = 'G:\ECoG\DD\dd20221129';
+TANKPATH = 'G:\ECoG\DDZ\ddz20221206';
+% TANKPATH = 'G:\ECoG\DD\dd20221129';
 MergeFolder = 'Merge1';
-BLOCKNUM = num2cell([4:6, 8:20]);
+BLOCKNUM = num2cell([2:18]);
 Block = 'Block-1';
 BLOCKPATH = cellfun(@(x) fullfile(TANKPATH,['Block-' num2str(x)]),BLOCKNUM,'UniformOutput',false);
 MERGEPATH = fullfile(TANKPATH,MergeFolder);

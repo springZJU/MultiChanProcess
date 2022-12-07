@@ -33,7 +33,8 @@ for cIndex = 1 : chNum
         t =temp(:, 1);
         trialN = arrayRep(temp(:, 2), unique(temp(:, 2)), 1 : length(unique(temp(:, 2))));
         scatter(t, trialN, 10, "black", "filled"); hold on
-        title(stimStr(dIndex));
+        
+            title(stimStr(dIndex));
 
         %% ROW2: whole time psth
         pIndex = colMax + dIndex;
@@ -69,7 +70,7 @@ for cIndex = 1 : chNum
     compareCol = (PSTH_CompareSize(1) + LFP_CompareSize(1)) * compareGroupN;
     for pIndex = 1 : compareGroupN
         posIndex = nGeneral * compareCol + pIndex;
-        AxesPSTH(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, PSTH_CompareSize, margins, paddings);
+        AxesPSTH(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, PSTH_CompareSize, margins, paddings, "alignment", "top-left");
         idxs = Compare_Index{pIndex, 1};
         for dIndex = 1 : length(idxs)
             X = psthTemp{idxs(dIndex), 1}(:, 1);
@@ -88,7 +89,7 @@ for cIndex = 1 : chNum
     for pIndex = 1 : compareGroupN
         compareIdx = pIndex + compareGroupN * PSTH_CompareSize(1);
         posIndex = nGeneral * compareCol + compareIdx;
-        AxesLFP(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, LFP_CompareSize, margins, paddings);
+        AxesLFP(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, LFP_CompareSize, margins, paddings, "alignment", "top-left");
         idxs = Compare_Index{pIndex, 1};
         for dIndex = 1 : length(idxs)
             X = lfpTemp{idxs(dIndex), 1}(:, 1);
@@ -112,19 +113,19 @@ for cIndex = 1 : chNum
     end
     addLines2Axes(AxesLFP, lines);
     addLines2Axes(AxesPSTH, lines);
+
     %% scale
-
-
-    for rIndex = 1 : nGeneral
-        scaleAxes(Axes(:, rIndex), "y");
-    end
     for rIndex = 1 : 3
         scaleAxes(Axes(:, rIndex), "x", plotWin);
     end
-    scaleAxes(AxesPSTH, "y");
-    scaleAxes(AxesLFP, "y");
+    for rIndex = 1 : nGeneral
+        scaleAxes(Axes(:, rIndex), "y", scaleAxes(Axes(:, rIndex), "y"));
+    end
+
     scaleAxes(AxesPSTH, "x", compareWin);
     scaleAxes(AxesLFP, "x", compareWin);
+    scaleAxes(AxesPSTH, "y", scaleAxes(AxesPSTH, "y"));
+    scaleAxes(AxesLFP, "y", scaleAxes(AxesLFP, "y"));
     drawnow;
 end
 

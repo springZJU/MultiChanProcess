@@ -77,20 +77,18 @@ for cIndex = 1 : chNum
         RS(dIndex, 1) = chSpikeLfp(dIndex).chSPK(cIndex).chRS;
     end
     posIndex = nGeneral * compareCol + pIndex;
-    AxesRS(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, [compareCol, plotRows-nGeneral], margins, paddings);
+    AxesRS(pIndex) = mSubplot(Fig(cIndex), plotRows, compareCol, posIndex, [compareCol, plotRows-nGeneral], margins, paddings, "alignment", "top-left");
     plot(1 : colMax, RS, "r-", "LineWidth", 2); hold on;
     scatter(1 : colMax, RS, 20, "red", "filled"); hold on
     plot([1, colMax], [13.8, 13.8], "b--"); hold on
     set(AxesRS(pIndex), "XTickLabel", stimStr);
     title("Rayleigh statistics");
     %% scale
-
-
-    for rIndex = 1 : nGeneral
-        scaleAxes(Axes(:, rIndex), "y");
-    end
     for rIndex = 1 : 3
         scaleAxes(Axes(:, rIndex), "x", plotWin);
+    end
+    for rIndex = 1 : nGeneral
+        scaleAxes(Axes(:, rIndex), "y", scaleAxes(Axes(:, rIndex), "y"));
     end
 
     drawnow;
