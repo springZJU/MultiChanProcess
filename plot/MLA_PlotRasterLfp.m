@@ -79,7 +79,7 @@ for cIndex = 1 : chNum
     % scale y
     Axes = findobj(Fig(cIndex), "Type", "axes");
     for rIndex = 1 : rowMax
-        scaleAxes(Axes(rIndex : rowMax : rowMax * colMax), "y");
+        scaleAxes(Axes(rIndex : rowMax : rowMax * colMax), "y", "on");
     end
 
     drawnow;

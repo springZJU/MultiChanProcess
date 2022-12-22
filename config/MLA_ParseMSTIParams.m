@@ -8,7 +8,7 @@ configTable = table2struct(readtable(configPath));
 mProtocol = configTable(matches({configTable.paradigm}', protStr));
 
 % parse CTLProt
-MSTIParams.fs = 500;
+MSTIParams.fs = 600;
 MSTIParams.orderIndex = cell2mat(cellfun(@(x) str2double(string(strsplit(x, "-"))), strsplit(string(strsplit(mProtocol.orderIndex, ";")), ",")', "uni", false));
 MSTIParams.Std_Dev_Onset = cell2mat(cellfun(@(x) str2double(strsplit(x, ",")), string(strsplit(mProtocol.Std_Dev_Onset, ";")), "uni", false)');
 MSTIParams.DevOnset = MSTIParams.Std_Dev_Onset(:, end);

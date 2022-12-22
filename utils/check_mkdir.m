@@ -1,4 +1,4 @@
-function savepath=check_mkdir_SPR(rootpath,newfolder)  %在rootpath中搜索newfolder，如果没有则建立，并返回newfolder的路径
+function savepath=check_mkdir(rootpath,newfolder)  %在rootpath中搜索newfolder，如果没有则建立，并返回newfolder的路径
 narginchk(1,2);
 if nargin == 2
     if ~exist(fullfile(rootpath,newfolder) ,'dir')

@@ -2,10 +2,10 @@ close all; clc; clear;
 
 
 %% generate .bin file
-TANKPATH = 'G:\ECoG\DDZ\ddz20221206';
+TANKPATH = 'G:\ECoG\DDZ\ddz20221220';
 % TANKPATH = 'G:\ECoG\DD\dd20221129';
 MergeFolder = 'Merge1';
-BLOCKNUM = num2cell([2:18]);
+BLOCKNUM = num2cell([1:21]);
 Block = 'Block-1';
 BLOCKPATH = cellfun(@(x) fullfile(TANKPATH,['Block-' num2str(x)]),BLOCKNUM,'UniformOutput',false);
 MERGEPATH = fullfile(TANKPATH,MergeFolder);
@@ -19,48 +19,6 @@ if ~exist(binPath,'file')
     TDT2binMerge(BLOCKPATH,MergeFolder);
 end
 
-%% raw wave comparison
-
-% fid = fopen(['D:\Lab\ECoGData\data', '\Lfp1.eeg'], 'r');
-% nChannels = 64;
-% WaveBinData = fread(fid, [nChannels inf], 'int16');
-% fclose(fid);
-
-
-
-% selectChs = input('Input selected channels:');
-% waveData = TDTbin2mat(BLOCKPATH{1},'TYPE',{'streams'},'CHANNEL',selectChs);
-% % waveRaw = waveData.streams.Wave.data;
-% binData = WaveBinData(selectChs,:);
-%
-% fs = waveData.streams.Wave.fs;
-% % t = 0:1/fs:10;
-% waveRaw = waveData.streams.Wave.data(:,1:length(t));
-% waveBinRaw = binData(:,1:length(t));
-% Fig = figure;
-% maximizeFig(Fig);
-% ymin = min(min(waveRaw));
-% ymax = max(max(waveRaw));
-%
-% for ch = 1 : length(selectChs)
-%     subplot(3,2,ch*2-1)
-%     plot(t,waveRaw(ch,:),colorLine{ch}); hold on;
-%     title(['waveform of Ch' num2str(selectChs(ch)) ]);
-%     ylim([ymin ymax]);
-%
-%     subplot(3,2,ch*2)
-%     plot(t,waveBinRaw(ch,:)*1e-6,colorLine{ch}); hold on;
-%     title(['waveBin of Ch' num2str(selectChs(ch)) ]);
-%     ylim([ymin ymax]);
-% end
-
-
-
-% %% Filtered data
-% fid = fopen([BLOCKPATH, '\temp_wh.dat'], 'r');
-% nChannels = 32;
-% filteredWaveBinData = fread(fid, [nChannels inf], 'int16');
-% fclose(fid);
 
 
 %% kilosort

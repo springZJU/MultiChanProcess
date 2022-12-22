@@ -1,7 +1,7 @@
 function MLA_ClickTrainProcess(MATPATH, FIGPATH)
 %% Parameter setting
 params.processFcn = @PassiveProcess_clickTrainContinuous;
-fd = 500;
+fd = 600;
 temp = string(strsplit(MATPATH, "\"));
 dateStr = temp(end - 1);
 protStr = temp(end - 2);
@@ -11,6 +11,7 @@ FIGPATH = strcat(FIGPATH, dateStr, "\");
 temp = dir(FIGPATH);
 Exist_Single = any(contains(string({temp.name}), "CH"));
 Exist_CSD_MUA = any(contains(string({temp.name}), "LFP_Compare_CSD_MUA"));
+% Exist_CSD_MUA = 1;
 Exist_LFP_By_Ch = any(contains(string({temp.name}), "LFP_ch"));
 Exist_LFP_Acorss_Ch = any(contains(string({temp.name}), "LFP_Compare_Chs"));
 if all([Exist_LFP_Acorss_Ch, Exist_LFP_By_Ch, Exist_CSD_MUA, Exist_Single])
@@ -28,6 +29,7 @@ end
 lfpDataset = ECOGResample(lfpDataset, fd);
 
 %% set trialAll
+trialAll([trialAll.devOrdr] == 0) = [];
 devType = unique([trialAll.devOrdr]);
 devTemp = {trialAll.devOnset}';
 [~, ordTemp] = ismember([trialAll.ordrSeq]', devType);
@@ -137,8 +139,7 @@ end
 if ~Exist_LFP_By_Ch
     FigLFP = MLA_PlotLfpByCh(chAll, CTLParams);
     scaleAxes(FigLFP, "x", plotWin);
-    YLim = scaleAxes(FigLFP, "y");
-    scaleAxes(FigLFP, "y", YLim);
+    scaleAxes(FigLFP, "y", "on");
     print(FigLFP, strcat(FIGPATH, "LFP_ch"), "-djpeg", "-r300");
 end
 
@@ -146,8 +147,7 @@ end
 if ~Exist_LFP_Acorss_Ch
     FigLFPCompare = MLA_PlotLfpAcrossCh(chAll, CTLParams);
     scaleAxes(FigLFPCompare, "x", [-50, 500]);
-    YLim = scaleAxes(FigLFPCompare, "y");
-    scaleAxes(FigLFPCompare, "y", YLim);
+    scaleAxes(FigLFPCompare, "y", "on");
     print(FigLFPCompare, strcat(FIGPATH, "LFP_Compare_Chs"), "-djpeg", "-r300");
 end
 
@@ -155,6 +155,10 @@ end
 if ~Exist_CSD_MUA
     FigCSD = MLA_Plot_CSD_MUA_AcrossCh(chAll, CTLParams);
     scaleAxes(FigCSD, "x", [-300, 600]);
+    AxesCSD = getObjVal(FigCSD, "FigOrAxes", [], "Tag", "CSD");
+    scaleAxes(AxesCSD, "c", "on", "symOpts", "max");
+    AxesMUA = getObjVal(FigCSD, "FigOrAxes", [], "Tag", "MUA");
+    scaleAxes(AxesMUA, "c", "on");
     print(FigCSD, strcat(FIGPATH, "LFP_Compare_CSD_MUA"), "-djpeg", "-r300");
 end
 close all;

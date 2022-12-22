@@ -50,7 +50,7 @@ for dIndex = 1 : length(chAll)
         colormap(AxesMUA(dIndex), "hot");
         ylim([1, size(MUA.Data, 1)]);
         xlim(selWin);
-        cRange = scaleAxes(AxesMUA(dIndex), "c");
+        cRange = scaleAxes(AxesMUA(dIndex), "c", "on");
         scaleAxes(AxesMUA(dIndex), "c", [0, 0.9] * cRange(2));
         % scaleAxes(Axes, "c", [0, 1]);
         set(AxesMUA(dIndex), "ytick", linspace(1, size(MUA.Data, 1), length(MUA.Chs)));
@@ -60,10 +60,9 @@ for dIndex = 1 : length(chAll)
     %     legend;
 end
 
-CLim = scaleAxes(AxesCSD, "c");
-scaleAxes(AxesCSD, "c", CLim*0.7);
-CLim = scaleAxes(AxesMUA, "c");
-scaleAxes(AxesMUA, "c", CLim*0.7);
+setAxes(AxesMUA, "Tag", "MUA");
+setAxes(AxesCSD, "Tag", "CSD");
+
 % add vertical line
 lines(1).X = 0;
 lines(1).color = "red";

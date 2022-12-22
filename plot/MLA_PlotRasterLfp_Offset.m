@@ -59,7 +59,7 @@ for cIndex = 1 : chNum
             temp = chSpikeLfp(dIndex).chLFP(cIndex).FFT(:, 2);
             t = chSpikeLfp(dIndex).chLFP(cIndex).FFT(:, 1);
             plot(t, temp, "Color", "red", "LineStyle", "-", "LineWidth", 1.5); hold on;
-            xlim([0 100]);
+            xlim([0 300]);
         end
     end
 
@@ -117,12 +117,12 @@ for cIndex = 1 : chNum
         scaleAxes(Axes(:, rIndex), "x", plotWin);
     end
     for rIndex = 1 : nGeneral
-        scaleAxes(Axes(:, rIndex), "y");
+        scaleAxes(Axes(:, rIndex), "y", "on");
     end
-    scaleAxes(AxesPSTH, "x", compareWin);
-    scaleAxes(AxesLFP, "x", compareWin);
-    scaleAxes(AxesPSTH, "y", scaleAxes(AxesPSTH, "y"));
-    scaleAxes(AxesLFP, "y", scaleAxes(AxesLFP, "y"));
+    scaleAxes(AxesPSTH, "x", [-100, 300]);
+    scaleAxes(AxesLFP, "x", [-100, 300]);
+    scaleAxes(AxesPSTH, "y", "on");
+    scaleAxes(AxesLFP, "y", "on");
 
     %% Rayleigh statistics
     compareIdx = compareGroupN * (PSTH_CompareSize(1) + LFP_CompareSize(1)) + 1;
@@ -134,6 +134,7 @@ for cIndex = 1 : chNum
     plot(1 : colMax, RS, "r-", "LineWidth", 2); hold on;
     scatter(1 : colMax, RS, 20, "red", "filled"); hold on
     plot([1, colMax], [13.8, 13.8], "b--"); hold on
+    set(AxesRS(pIndex), "XTick", 1 : colMax)
     set(AxesRS(pIndex), "XTickLabel", stimStr);
     title("Rayleigh statistics");
 

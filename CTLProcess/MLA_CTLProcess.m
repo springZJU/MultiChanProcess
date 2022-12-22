@@ -1,6 +1,6 @@
 monkeyName = "DDZ";
 clearvars -except monkeyName
-clc
+clc; close all
 rootPathMat = strcat("E:\MonkeyLinearArray\MAT Data\", monkeyName, "\CTL_New\");
 rootPathFig = "E:\MonkeyLinearArray\Figure\CTL_New\";
 recordPath = strcat(fileparts(fileparts(mfilename("fullpath"))), "\utils\MLA_New_", monkeyName, "_Recording.xlsx");

@@ -184,13 +184,13 @@ for cIndex = 1 : chNum
         scaleAxes(Axes(:, rIndex), "x", plotWin);
     end
     for rIndex = 1 : nGeneral
-        scaleAxes(Axes(:, rIndex), "y", scaleAxes(Axes(:, rIndex), "y"));
+        scaleAxes(Axes(:, rIndex), "y", "on");
     end
 
     scaleAxes(AxesPSTH, "x", compareWin);
     scaleAxes(AxesLFP, "x", compareWin);
-    scaleAxes(AxesPSTH, "y", scaleAxes(AxesPSTH, "y"));
-    scaleAxes(AxesLFP, "y", scaleAxes(AxesLFP, "y"));
+    scaleAxes(AxesPSTH, "y", "on");
+    scaleAxes(AxesLFP, "y", "on");
     drawnow;
 end
 

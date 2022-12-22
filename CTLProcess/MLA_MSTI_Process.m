@@ -131,7 +131,7 @@ end
 if ~Exist_LFP_By_Ch
     FigLFP = MLA_PlotLfpByCh(chAll, MSTIParams);
     scaleAxes(FigLFP, "x", plotWin);
-    scaleAxes(FigLFP, "y");
+    scaleAxes(FigLFP, "y", "on");
     print(FigLFP, strcat(FIGPATH, "LFP_ch"), "-djpeg", "-r300");
 end
 

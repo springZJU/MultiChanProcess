@@ -58,14 +58,16 @@ for idIndex= 1 : length(1 : length(unitID))
     SpikeIndex = double(spikeTimeIdx(spikeClusters==unitID(idIndex) & spikeTimeIdx > onsetIdx & spikeTimeIdx <= onsetIdx + size(data, 2))) - onsetIdx;
     SpikeTime = double(SpikeIndex - 1) / fs ;
     spkSegIdx = cell2mat(arrayfun(@(x) x + wfWin, SpikeIndex, "UniformOutput", false));
-    spkSegIdx(spkSegIdx(: ,1) + wfWin(1) < 0 | spkSegIdx(: ,2) + wfWin(2) > size(data, 2), :) = [];
+    if ~isempty(spkSegIdx)
+        spkSegIdx(spkSegIdx(: ,1) + wfWin(1) < 0 | spkSegIdx(: ,2) + wfWin(2) > size(data, 2), :) = [];
 
-    % Read spike time-centered waveforms
-    chDataSel = data(MChInID(idIndex), :);
-    waveForms = double(cell2mat(cellfun(@(x) chDataSel(x(1) : x(2)), num2cell(spkSegIdx, 2) , "UniformOutput", false)));
-    wfSmooth = smoothdata(waveForms','gaussian', 10)';
-    waveFormsMean = mean(waveForms);
-    wfSmMean = mean(wfSmooth);
+        % Read spike time-centered waveforms
+        chDataSel = data(MChInID(idIndex), :);
+        waveForms = double(cell2mat(cellfun(@(x) chDataSel(x(1) : x(2)), num2cell(spkSegIdx, 2) , "UniformOutput", false)));
+        wfSmooth = smoothdata(waveForms','gaussian', 10)';
+        waveFormsMean = mean(waveForms);
+        wfSmMean = mean(wfSmooth);
+    
 
     % Package in wf(idIndex) struct
     wf(idIndex).unitID = unitID(idIndex);
@@ -79,6 +81,7 @@ for idIndex= 1 : length(1 : length(unitID))
     wf(idIndex).wfSmMean = wfSmMean;
     disp("DONE!");
     clc;
+    end
 end
 clear mmf
 return

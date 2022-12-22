@@ -88,7 +88,7 @@ for cIndex = 1 : chNum
         scaleAxes(Axes(:, rIndex), "x", plotWin);
     end
     for rIndex = 1 : nGeneral
-        scaleAxes(Axes(:, rIndex), "y", scaleAxes(Axes(:, rIndex), "y"));
+        scaleAxes(Axes(:, rIndex), "y", "on");
     end
 
     drawnow;
