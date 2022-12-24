@@ -2,10 +2,9 @@ close all; clc; clear;
 
 
 %% generate .bin file
-TANKPATH = 'G:\ECoG\DDZ\ddz20221220';
-% TANKPATH = 'G:\ECoG\DD\dd20221129';
-MergeFolder = 'Merge1';
-BLOCKNUM = num2cell([1:21]);
+TANKPATH = 'G:\ECoG\DDZ\ddz20221223';  %tank路径
+MergeFolder = 'Merge1'; %在tank路径下生成Merge1文件夹，存放ks结果
+BLOCKNUM = num2cell([1:20]); %选择要sort的block number
 Block = 'Block-1';
 BLOCKPATH = cellfun(@(x) fullfile(TANKPATH,['Block-' num2str(x)]),BLOCKNUM,'UniformOutput',false);
 MERGEPATH = fullfile(TANKPATH,MergeFolder);
@@ -22,9 +21,8 @@ end
 
 
 %% kilosort
-% run([fileparts(mfilename('fullpath')), '\config\configFileRat.m']);
 run('config\configFileRat.m');
-% ops.chanMap = 1:ops.Nchan; % treated as linear probe if no chanMap file
+% treated as linear probe if no chanMap file
 ops.chanMap = 'config\chan16_1_kilosortChanMap.mat';
 % total number of channels in your recording
 ops.NchanTOT = 16;

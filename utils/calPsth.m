@@ -1,5 +1,4 @@
 function resPsth = calPsth(data,binpara,scaleFactor,varargin)
-EDGEMISMATCH = false;
 NTRIAL = 1;
 for i = 1:2:length(varargin)
     eval([ upper(varargin{i}) '=varargin{i+1};']);
