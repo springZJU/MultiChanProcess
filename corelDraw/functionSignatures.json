@@ -1,0 +1,12 @@
+{
+    "_schemaVersion": "1.0.0",
+
+
+    "distanceToDiagonal": {
+        "inputs": [
+            {"name": "x", "kind": "required", "type": ["numeric", "numel=1"], "purpose": "xtick"},
+            {"name": "y", "kind": "required",  "type": ["numeric", "numel=1"], "purpose": "ytick"},
+            {"name": "scale", "kind": "required",  "type": ["char", "choices={'linear','log10'}"], "purpose": "scale of xtick"}
+        ]
+    }
+}

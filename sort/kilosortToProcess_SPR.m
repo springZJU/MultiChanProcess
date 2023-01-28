@@ -2,9 +2,9 @@ close all; clc; clear;
 
 
 %% generate .bin file
-TANKPATH = 'G:\ECoG\DDZ\ddz20221223';  %tank路径
+TANKPATH = 'G:\ECoG\DDZ\ddz20221224';  %tank路径
 MergeFolder = 'Merge1'; %在tank路径下生成Merge1文件夹，存放ks结果
-BLOCKNUM = num2cell([1:20]); %选择要sort的block number
+BLOCKNUM = num2cell([1:19]); %选择要sort的block number
 Block = 'Block-1';
 BLOCKPATH = cellfun(@(x) fullfile(TANKPATH,['Block-' num2str(x)]),BLOCKNUM,'UniformOutput',false);
 MERGEPATH = fullfile(TANKPATH,MergeFolder);

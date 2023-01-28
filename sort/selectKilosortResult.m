@@ -1,5 +1,5 @@
 clear; clc
-TANKPATH = 'G:\ECoG\DDZ\ddz20221221';
+TANKPATH = 'G:\ECoG\DDZ\ddz20221227';
 % TANKPATH = 'G:\ECoG\DD\dd20221130';
 
 
@@ -10,8 +10,8 @@ chAll = 16;
 fs = 12207.031250;
 
 NPYPATH = fullfile(MERGEPATH, 'th7_6'); % the path including ks_result
-ch =  [0, 1, 3, 4, 8, 12, 13, 14]; % channels index of kilosort, that means chKs = chTDT - 1;
-idx = [1, 0, 2, 3, 6, 14, 13, 15]; % the corresponding id
+ch =  [1, 3, 5, 7]; % channels index of kilosort, that means chKs = chTDT - 1;
+idx = [0, 1, 2, 3]; % the corresponding id
 
 kiloSpikeAll = cell(max([chAll ch]),1);
 

@@ -14,9 +14,9 @@ Exist_CSD_MUA = any(contains(string({temp.name}), "LFP_Compare_CSD_MUA"));
 % Exist_CSD_MUA = 1;
 Exist_LFP_By_Ch = any(contains(string({temp.name}), "LFP_ch"));
 Exist_LFP_Acorss_Ch = any(contains(string({temp.name}), "LFP_Compare_Chs"));
-if all([Exist_LFP_Acorss_Ch, Exist_LFP_By_Ch, Exist_CSD_MUA, Exist_Single])
-    return
-end
+% if all([Exist_LFP_Acorss_Ch, Exist_LFP_By_Ch, Exist_CSD_MUA, Exist_Single])
+%     return
+% end
 
 [trialAll, spikeDataset, lfpDataset] = spikeLfpProcess(DATAPATH, params);
 
@@ -51,8 +51,7 @@ end
 trialsWAVE = selectEcog(WAVEDataset, trialAll, "dev onset", Window);
 
 % spike
-psthPara.binsize = 10; % ms
-psthPara.binstep = 4; % ms
+
 chSelect = [spikeDataset.realCh]';
 trialsSpike = selectSpike(spikeDataset, trialAllRaw, psthPara, CTLParams, "dev onset");
 
@@ -107,6 +106,8 @@ for dIndex = 1:length(devType)
     %% spike
     spikePlot = cellfun(@(x) cell2mat(x), num2cell(struct2cell(trialsSPK)', 1), "UniformOutput", false);
     chRS = cellfun(@(x) RayleighStatistic(x(:, 1), BaseICI(dIndex)), spikePlot, "UniformOutput", false);
+    psthPara.binsize = 10; % ms
+    psthPara.binstep = 4; % ms
     chPSTH = cellfun(@(x) calPsth(x(:, 1), psthPara, 1e3, 'EDGE', Window, 'NTRIAL', sum(tIndex)), spikePlot, "uni", false);
     chStr = fields(trialsSPK)';
 
@@ -114,7 +115,10 @@ for dIndex = 1:length(devType)
 
 
     % integration
+    chSpikeLfp(dIndex).trials = find(tIndex)';
+    chSpikeLfp(dIndex).trialsRaw = find(tIndexRaw)';
     chSpikeLfp(dIndex).trialNum = sum(tIndex);
+    chSpikeLfp(dIndex).trialNumRaw = sum(tIndexRaw);
     chSpikeLfp(dIndex).stimStr = stimStr(dIndex);
     chSpikeLfp(dIndex).chSPK = chSPK;
     chSpikeLfp(dIndex).chLFP = chLFP(chSelect);
@@ -161,6 +165,8 @@ if ~Exist_CSD_MUA
     scaleAxes(AxesMUA, "c", "on");
     print(FigCSD, strcat(FIGPATH, "LFP_Compare_CSD_MUA"), "-djpeg", "-r300");
 end
+SAVENAME = strcat(FIGPATH, "res.mat");
+save(SAVENAME, "chSpikeLfp", "chLFP", "trialAll", "trialAllRaw", "-mat");
 close all;
 end
 
