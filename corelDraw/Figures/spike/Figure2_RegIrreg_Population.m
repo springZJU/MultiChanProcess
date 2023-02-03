@@ -1,6 +1,7 @@
 clc;clear;
 protSel = "TB_Basic_4_4.06_Contol_Tone";
-DATAPATH = strcat(fileparts(fileparts(mfilename("fullpath"))), "\DATA\", protSel, "\popRes");
+popResPath = "E:\MonkeyLinearArray\ProcessedData\";
+DATAPATH = strcat(popResPath, protSel, "\popRes");
 load(DATAPATH);
 
 %% compute latency

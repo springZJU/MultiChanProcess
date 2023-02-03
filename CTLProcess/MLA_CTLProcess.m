@@ -12,8 +12,8 @@ protocols = string({temp.name}');
 
 %% select data
 dateSel = "";
-protSel = "";
-
+protSel = ["TB_Basic_4_4.06_Contol_Tone", "TB_Oscillation_500_250_125_60_30_BF"];
+% protSel = "";
 for rIndex = 1 : length(protocols)
 
     protPathMat = strcat(rootPathMat, protocols(rIndex), "\");
@@ -26,7 +26,7 @@ for rIndex = 1 : length(protocols)
     MATPATH = cellfun(@(x) string([char(protPathMat), x, '\']), {temp.name}', "UniformOutput", false);
     MATPATH = MATPATH( contains(string(MATPATH), dateSel) & contains(string(MATPATH), protSel) );
 
-    for mIndex = 1 : length(MATPATH)
+    for mIndex = 13 : length(MATPATH)
 
         if strcmp(protocolStr, "Noise")
             % MLA_Noise(MATPATH{mIndex}, FIGPATH);
@@ -38,23 +38,12 @@ for rIndex = 1 : length(protocols)
         elseif matches(protocolStr, ["ToneCF", "Tone_Prior_CF"])
             MLA_FRA(MATPATH{mIndex}, FIGPATH);
 
-        elseif MLA_IsCTLProt(protocolStr) % click train longterm
-%             try
-                MLA_ClickTrainProcess(MATPATH{mIndex}, FIGPATH);
-%             catch e
-%                 disp(e.message);
-%                 e.stack(1)
-%                 continue;
-%             end
+        elseif MLA_IsCTLProt(protocolStr) 
+            MLA_ClickTrainProcess(MATPATH{mIndex}, FIGPATH);
 
-        elseif MLA_IsMSTIProt(protocolStr) % click train longterm
-%             try
-                MLA_MSTI_Process(MATPATH{mIndex}, FIGPATH);
-%             catch e
-%                 disp(e.message);
-%                 e.stack(1)
-%                 continue;
-%             end
+        elseif MLA_IsMSTIProt(protocolStr) 
+            MLA_MSTI_Process(MATPATH{mIndex}, FIGPATH);
+            
         end
     end
 end

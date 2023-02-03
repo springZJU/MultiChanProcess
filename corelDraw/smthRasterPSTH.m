@@ -12,8 +12,12 @@ for chIndex = 1:length(chSPK)
     chSpikeLfp(stimCode).chSPK(chIndex).spikePlotNew = spike;
     % spike(spike(:, 1) < -2200, :) = [];
     % psth
-    PSTH = chSPK(chIndex).PSTH;
-    PSTH(:, 2) = smoothdata(PSTH(:, 2),'gaussian',25);
+%     psthPara.binsize = 30; % ms
+%     psthPara.binstep = 1; % ms
+%     PSTH = calPsth(spike(:, 1), psthPara, 1e3, 'EDGE', [-2500, 2500], 'NTRIAL', length(chSpikeLfp(stimCode).trialsRaw));
+
+        PSTH = chSPK(chIndex).PSTH;
+      PSTH(:, 2) = smoothdata(PSTH(:, 2),'gaussian',5);
     chSpikeLfp(stimCode).chSPK(chIndex).PSTH = PSTH;
 end
 end

@@ -19,4 +19,5 @@ MUA.Data = interp2(temp, 3);
 MUA.Chs = 1 : size(trialsWave{1}, 1);
 MUA.tImage = linspace(window(1), window(2), size(MUA.Data, 2));
 MUA.tWave = linspace(window(1), window(2), size(MUA.Wave, 2));
+MUA.fs =fs;
 end

@@ -40,7 +40,7 @@ trialAll(1) = [];
 
 %% split data
 [trialsLFPRaw, ~, ~] = selectEcog(lfpDataset, trialAll, "dev onset", Window); % "dev onset"; "trial onset"
-trialsLFPFiltered = ECOGFilter(trialsLFPRaw, 0.1, 200, fd);
+trialsLFPFiltered = ECOGFilter(trialsLFPRaw, 0.1, 1000, fd);
 [trialsLFPFiltered, ~, idx] = excludeTrialsChs(trialsLFPFiltered, 0.04);
 trialAllRaw = trialAll;
 trialAll = trialAll(idx);

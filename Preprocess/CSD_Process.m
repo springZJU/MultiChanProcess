@@ -37,11 +37,13 @@ dz = mInputParser.Results.dz;
             W = -0.4 * [1, -2, 1];
             Boundary = 1;
     end
-CSD_Raw = cellfun(@(x) CSD_Compute(x, Boundary, W, dz), trialsLFP, "UniformOutput", false);
+[CSD_Raw, CSD_Wave] = cellfun(@(x) CSD_Compute(x, Boundary, W, dz), trialsLFP, "UniformOutput", false);
+
 CSD.Data = cell2mat(cellfun(@mean, changeCellRowNum(CSD_Raw), "uni", false));
 CSD.Chs = Boundary + 1 : size(trialsLFP{1}, 1) - Boundary;
 CSD.t = linspace(window(1), window(2), size(CSD.Data, 2));
 CSD.Boundary = Boundary;
+CSD.Wave = CSD_Wave;
 
 %% compute lfp image data
 temp = cellfun(@(x) interp2(x, 3), trialsLFP, "UniformOutput", false);
