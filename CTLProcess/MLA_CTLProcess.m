@@ -12,8 +12,8 @@ protocols = string({temp.name}');
 
 %% select data
 dateSel = "";
-protSel = ["TB_Basic_4_4.06_Contol_Tone", "TB_Oscillation_500_250_125_60_30_BF"];
-% protSel = "";
+% protSel = ["TB_Basic_4_4.06_Contol_Tone", "TB_Oscillation_500_250_125_60_30_BF", "TB_Ratio_4_4.04", "TB_Var_400_200_100_50_Reg"];
+protSel = "TB_BaseICI_4_8_16";
 for rIndex = 1 : length(protocols)
 
     protPathMat = strcat(rootPathMat, protocols(rIndex), "\");
@@ -26,7 +26,7 @@ for rIndex = 1 : length(protocols)
     MATPATH = cellfun(@(x) string([char(protPathMat), x, '\']), {temp.name}', "UniformOutput", false);
     MATPATH = MATPATH( contains(string(MATPATH), dateSel) & contains(string(MATPATH), protSel) );
 
-    for mIndex = 13 : length(MATPATH)
+    for mIndex = 1 : length(MATPATH)
 
         if strcmp(protocolStr, "Noise")
             % MLA_Noise(MATPATH{mIndex}, FIGPATH);

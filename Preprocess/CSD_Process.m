@@ -43,6 +43,7 @@ CSD.Data = cell2mat(cellfun(@mean, changeCellRowNum(CSD_Raw), "uni", false));
 CSD.Chs = Boundary + 1 : size(trialsLFP{1}, 1) - Boundary;
 CSD.t = linspace(window(1), window(2), size(CSD.Data, 2));
 CSD.Boundary = Boundary;
+CSD.tWave = linspace(window(1), window(2), size(CSD_Wave{1}, 2));
 CSD.Wave = CSD_Wave;
 
 %% compute lfp image data

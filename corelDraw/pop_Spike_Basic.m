@@ -40,12 +40,14 @@ for rIndex = 1 : length(protocols)
         DATANAME = strcat(FIGPATH(fIndex), "res.mat");
         load(DATANAME);
         chSPK = chSpikeLfp(1).chSPK;
-        if isempty(popRes(fIndex).ChSelect)
-            continue
-        end
         chIdx = matches(string({chSPK.info}'), string(strsplit(popRes(fIndex).ChSelect, ',')));
         popRes(fIndex).chSpikeLfp = chSpikeLfp;
         popRes(fIndex).chLFP = chLFP;
+        popRes(fIndex).chCSD = chCSD;
+        popRes(fIndex).chMUA = chMUA;
+        if isempty(popRes(fIndex).ChSelect)
+            continue
+        end
         for pIndex = 1 : length(chSpikeLfp)
             chSpikeLfp(pIndex).trialNumRaw = chSpikeLfp(pIndex).trialNum;
             chSpikeLfp(pIndex).chSPK(~chIdx) = [];
@@ -78,7 +80,6 @@ for rIndex = 1 : length(protocols)
                  "peak"; "width"; "latency"; "h_ranksum"; "p_ranksum"; "h_ttest"; "p_ttest"]);
             chSpikeLfp(pIndex).chLFP = addFieldToStruct(chSpikeLfp(pIndex).chLFP, cellstr(repmat(Dates(fIndex), sum(chIdx), 1)), "Date");
             popAll(pIndex).chSPK = [popAll(pIndex).chSPK; chSpikeLfp(pIndex).chSPK];
-            popAll(pIndex).chLFP = [popAll(pIndex).chLFP; chSpikeLfp(pIndex).chLFP];
             popAll(pIndex).chLFP = [popAll(pIndex).chLFP; chSpikeLfp(pIndex).chLFP];
         end
     end

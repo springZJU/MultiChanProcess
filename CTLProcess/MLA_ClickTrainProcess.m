@@ -10,13 +10,13 @@ FIGPATH = strcat(FIGPATH, dateStr, "\");
 
 temp = dir(FIGPATH);
 Exist_Single = any(contains(string({temp.name}), "CH"));
-% Exist_CSD_MUA = any(contains(string({temp.name}), "LFP_Compare_CSD_MUA"));
-Exist_CSD_MUA = 0;
+Exist_CSD_MUA = any(contains(string({temp.name}), "LFP_Compare_CSD_MUA"));
+% Exist_CSD_MUA = 0;
 Exist_LFP_By_Ch = any(contains(string({temp.name}), "LFP_ch"));
 Exist_LFP_Acorss_Ch = any(contains(string({temp.name}), "LFP_Compare_Chs"));
-% if all([Exist_LFP_Acorss_Ch, Exist_LFP_By_Ch, Exist_CSD_MUA, Exist_Single])
-%     return
-% end
+if all([Exist_LFP_Acorss_Ch, Exist_LFP_By_Ch, Exist_CSD_MUA, Exist_Single])
+    return
+end
 
 [trialAll, spikeDataset, lfpDataset] = spikeLfpProcess(DATAPATH, params);
 
@@ -40,7 +40,7 @@ trialAll(1) = [];
 %% split data
 [trialsLFPRaw, ~, ~] = selectEcog(lfpDataset, trialAll, "dev onset", Window); % "dev onset"; "trial onset"
 trialsLFPFiltered = ECOGFilter(trialsLFPRaw, 0.1, 200, fd);
-[trialsLFPFiltered, ~, idx] = excludeTrialsChs(trialsLFPFiltered, 0.04);
+[trialsLFPFiltered, ~, idx] = excludeTrialsChs(trialsLFPFiltered, 0.1);
 trialsLFPRaw = trialsLFPRaw(idx);
 trialAllRaw = trialAll;
 trialAll = trialAll(idx);
@@ -91,19 +91,26 @@ for dIndex = 1:length(devType)
     % CSD
     [badCh, dz] = MLA_CSD_Config(MATPATH);
     CSD = CSD_Process(trialsLFP, Window, "kCSD", badCh, dz);
+    chCSD(dIndex).info = stimStr(dIndex);
+    chCSD(dIndex).data = rmfield(CSD, ["Data", "t"]);
     % MUA
     MUA = MUA_Process(trialsWave, Window, selWin, WAVEDataset.fs);
+    chMUA(dIndex).info = stimStr(dIndex);
+    chMUA(dIndex).data = rmfield(MUA, ["Data", "tImage"]);
     else
         CSD = [];
         MUA = [];
     end
 
+  
     for ch = 1 : size(chMean{dIndex, 1}, 1)
         chLFP(ch).Wave(:, 1) = t';
         chLFP(ch).Wave(:, 2) = chMean{dIndex, 1}(ch, :)';
         chLFP(ch).FFT(:, 1) = ff';
         chLFP(ch).FFT(:, 2) = PMean{dIndex, 1}(ch, :)';
     end
+
+    
 
     %% spike
     spikePlot = cellfun(@(x) cell2mat(x), num2cell(struct2cell(trialsSPK)', 1), "UniformOutput", false);
@@ -157,20 +164,18 @@ if ~Exist_LFP_Acorss_Ch
     print(FigLFPCompare, strcat(FIGPATH, "LFP_Compare_Chs"), "-djpeg", "-r300");
 end
 
-% % CSD comparison
-% if ~Exist_CSD_MUA
-%     FigCSD = MLA_Plot_CSD_MUA_AcrossCh(chAll, CTLParams);
-%     scaleAxes(FigCSD, "x", [-300, 600]);
-%     AxesCSD = getObjVal(FigCSD, "FigOrAxes", [], "Tag", "CSD");
-%     scaleAxes(AxesCSD, "c", "on", "symOpts", "max");
-%     AxesMUA = getObjVal(FigCSD, "FigOrAxes", [], "Tag", "MUA");
-%     scaleAxes(AxesMUA, "c", "on");
-%     print(FigCSD, strcat(FIGPATH, "LFP_Compare_CSD_MUA"), "-djpeg", "-r300");
-% end
+% CSD comparison
+if ~Exist_CSD_MUA
+    FigCSD = MLA_Plot_CSD_MUA_AcrossCh(chAll, CTLParams);
+    scaleAxes(FigCSD, "x", [-300, 600]);
+    AxesCSD = getObjVal(FigCSD, "FigOrAxes", [], "Tag", "CSD");
+    scaleAxes(AxesCSD, "c", "on", "symOpts", "max");
+    AxesMUA = getObjVal(FigCSD, "FigOrAxes", [], "Tag", "MUA");
+    scaleAxes(AxesMUA, "c", "on");
+    print(FigCSD, strcat(FIGPATH, "LFP_Compare_CSD_MUA"), "-djpeg", "-r300");
+end
 SAVENAME = strcat(FIGPATH, "res.mat");
-CSD = rmfield(CSD, "Data");
-MUA = rmfield(MUA, "Data");
-save(SAVENAME, "chSpikeLfp", "chLFP", "CSD", "MUA", "trialAll", "trialAllRaw", "-mat");
+save(SAVENAME, "chSpikeLfp", "chLFP", "chCSD", "chMUA", "trialAll", "trialAllRaw", "-mat");
 close all;
 end
 
