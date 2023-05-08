@@ -1,4 +1,4 @@
-monkeyName = "DDZ";
+monkeyName = "CM";
 clearvars -except monkeyName
 clc; close all
 rootPathMat = strcat("E:\MonkeyLinearArray\MAT Data\", monkeyName, "\CTL_New\");
@@ -12,8 +12,8 @@ protocols = string({temp.name}');
 
 %% select data
 dateSel = "";
-% protSel = ["TB_Basic_4_4.06_Contol_Tone", "TB_Oscillation_500_250_125_60_30_BF", "TB_Ratio_4_4.04", "TB_Var_400_200_100_50_Reg"];
-protSel = "TB_BaseICI_4_8_16";
+% protSel = ["TB_Basic_4_4.06_Contol_Tone", "TB_Oscillation_500_250_125_60_30_BF", "TB_Ratio_4_4.04", "TB_Var_400_200_100_50_Reg", "TB_BaseICI_4_8_16"];
+protSel = "Offset_Variance_Effect_4ms_sigma50_2_500msReg";
 for rIndex = 1 : length(protocols)
 
     protPathMat = strcat(rootPathMat, protocols(rIndex), "\");
@@ -32,7 +32,7 @@ for rIndex = 1 : length(protocols)
             % MLA_Noise(MATPATH{mIndex}, FIGPATH);
             continue
 
-        elseif strcmp(protocolStr, "BF_CSD_Nice")
+        elseif matches(protocolStr, ["BF_CSD_Nice", "BF_Prior_CSD"])
             MLA_CSD(MATPATH{mIndex}, FIGPATH);
 
         elseif matches(protocolStr, ["ToneCF", "Tone_Prior_CF"])

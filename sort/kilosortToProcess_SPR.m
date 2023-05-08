@@ -1,10 +1,18 @@
 close all; clc; clear;
+% TANKPATHs = {'G:\ECoG\CM\cm20230322'; 'G:\ECoG\CM\cm20230323'; 'G:\ECoG\CM\cm20230324'; 'G:\ECoG\CM\cm20230327'; ...
+%     'G:\ECoG\CM\cm20230328'; 'G:\ECoG\CM\cm20230329'; 'G:\ECoG\CM\cm20230330'; 'G:\ECoG\CM\cm20230401'; ...
+%     'G:\ECoG\CM\cm20230402'; 'G:\ECoG\CM\cm20230403'; 'G:\ECoG\CM\cm20230404'; 'G:\ECoG\CM\cm20230405'};
+% BLOCKNUMs = {[8:25], [6:23], [2:20], [2:20], ...
+%     [2:20], [4:22], [3:22], [2:20], ...
+%     [1:20], [2:20], [1:19], [2:20]};
 
-
+TANKPATHs = {'G:\ECoG\CM\cm20230406'};
+BLOCKNUMs = {[2:20]};
+for tIndex = 1:length(TANKPATHs)
 %% generate .bin file
-TANKPATH = 'G:\ECoG\DDZ\ddz20221224';  %tank路径
+TANKPATH = TANKPATHs{tIndex};  %tank路径
 MergeFolder = 'Merge1'; %在tank路径下生成Merge1文件夹，存放ks结果
-BLOCKNUM = num2cell([1:19]); %选择要sort的block number
+BLOCKNUM = num2cell(BLOCKNUMs{tIndex}); %选择要sort的block number
 Block = 'Block-1';
 BLOCKPATH = cellfun(@(x) fullfile(TANKPATH,['Block-' num2str(x)]),BLOCKNUM,'UniformOutput',false);
 MERGEPATH = fullfile(TANKPATH,MergeFolder);
@@ -36,4 +44,5 @@ for th2 = [6 ]
     end
 %     display(['the first sound of ' Block ' is: '  num2str(data.epocs.ordr.onset(1))]);
     %     system('phy template-gui params.py');
+end
 end

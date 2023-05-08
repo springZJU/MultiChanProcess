@@ -5,6 +5,8 @@ if contains(MATPATH, "DDZ")
     recordPath = strcat(fileparts(fileparts(mfilename("fullpath"))), "\utils\MLA_New_DDZ_Recording.xlsx");
 elseif contains(MATPATH, "DD")
     recordPath = strcat(fileparts(fileparts(mfilename("fullpath"))), "\utils\MLA_New_DD_Recording.xlsx");
+elseif contains(MATPATH, "CM")
+    recordPath = strcat(fileparts(fileparts(mfilename("fullpath"))), "\utils\MLA_New_CM_Recording.xlsx");
 end
 %% read excel
 recordInfo = table2struct(readtable(recordPath));

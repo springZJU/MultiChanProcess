@@ -1,5 +1,6 @@
 function smooth_signal = mGaussionFilter(signal, sigma, size)
-if ~iscolumn(signal)
+signalTemp = signal;
+if ~iscolumn(signalTemp)
     signal = signal';
 end
 n=ceil((size-1)/2);
@@ -15,4 +16,7 @@ else
     kernel = kernel./sum(kernel);
     smooth_signal = conv(signal, kernel, 'same');
     smooth_signal = smooth_signal(n+1:end-n);
+end
+if ~iscolumn(signalTemp)
+    smooth_signal = smooth_signal';
 end

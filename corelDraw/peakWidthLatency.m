@@ -1,10 +1,14 @@
-function [peak, width, latency] = peakWidthLatency(spikes, baseWin, calWin, trials)
+function [peak, width, latency, HalfEdge] = peakWidthLatency(spikes, baseWin, calWin, trials, protocol)
 [~, ~, Raw, ~, trials1] = calFR(spikes, calWin, trials);
 excludeIndex = Raw >= 2 & Raw > mean(Raw)+3*std(Raw);
 spikes(ismember(spikes(:, 2),trials1(excludeIndex)), :) = [];
 trials(excludeIndex) = [];
 [frMean, ~, ~, frSD] = calFR(spikes, baseWin, trials);
-psthPara.binsize = 30; % ms
+if contains(protocol, ["Offset_2_128_4s_New", "Offset_Duration_Effect_16ms_Reg_New", "Offset_Variance_Effect_4ms_16ms_sigma250_2_500msReg"])
+    psthPara.binsize = 10; % ms
+else
+    psthPara.binsize = 30; % ms
+end
 psthPara.binstep = 1; % ms
 % change window
 calWinRaw = calWin;
@@ -23,15 +27,28 @@ peak = max(smthPSTH);
 
 thr = 0.5*peak;
 evokeIdx = find(smthPSTH >= thr);
-temp = find([0; diff(evokeIdx)] > 25);
-if ~isempty(temp)
-    evokeIdx(temp(1):end) = [];
+flag = 1;
+while flag == 1
+    temp = find([0; diff(evokeIdx)] > 25);
+    if ~isempty(temp)
+        if temp(1)>5
+            evokeIdx(temp(1):end) = [];
+            flag = 0;
+        else
+            evokeIdx(1:temp(1)) = [];
+        end
+
+    else
+        flag = 0;
+    end
 end
-[firstIdx, lastIdx] = mConsecutive(evokeIdx, 5);
+[firstIdx, lastIdx] = mConsecutive(evokeIdx, 4);
 if ~isempty(firstIdx)
     width = PSTH(evokeIdx(lastIdx), 1)- PSTH(evokeIdx(firstIdx), 1);
+    HalfEdge = [PSTH(evokeIdx(firstIdx), 1), PSTH(evokeIdx(lastIdx), 1)];
 else
     width = 0;
+    HalfEdge = [0, 0];
 end
 
 %% latency

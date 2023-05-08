@@ -1,5 +1,5 @@
 clc;clear
-monkeyName = "DDZ";
+monkeyName = ["DDZ", "CM"];
 rootPathFig = "E:\MonkeyLinearArray\Figure\CTL_New\";
 
 %% set protocols
@@ -15,8 +15,11 @@ protSel = ["TB_Oscillation_500_250_125_60_30_BF"];
 for rIndex = 1 : length(protocols)
     clear popAll popRes
     %% load excel
-    configPath = strcat(fileparts(mfilename("fullpath")), "\MLA_", monkeyName, "_NeuronSelect.xlsx");
-    popRes = table2struct(readtable(configPath));
+     for mIndex = 1 : length(monkeyName)
+        configPath = strcat(fileparts(mfilename("fullpath")), "\MLA_", monkeyName, "_NeuronSelect.xlsx");
+        popRes{mIndex, 1} = table2struct(readtable(configPath(mIndex)));
+    end
+    popRes = cell2mat(popRes);
     DATAPATH = "E:\MonkeyLinearArray\ProcessedData\";
 
     protPathFig = strcat(rootPathFig, protocols(rIndex), "\");
@@ -27,7 +30,13 @@ for rIndex = 1 : length(protocols)
     if isempty(FIGPATH)
         continue
     end
-    temp = regexpi(string(FIGPATH), strcat(monkeyName, "\d*"), "match");
+
+    clear temp
+    for mIndex = 1 : length(monkeyName)
+        temp(:, mIndex) = regexpi(string(FIGPATH), strcat(monkeyName(mIndex), "\d*"), "match");
+    end
+    temp = rowFcn(@(x) [x{1}, x{2}], temp, "UniformOutput", false);
+
     FIGPATH(cellfun(@isempty, temp)) = [];
     Dates = [temp{:}]';
     load(strcat(FIGPATH(1), "res.mat"));
@@ -38,15 +47,17 @@ for rIndex = 1 : length(protocols)
         
     end
     for fIndex = 1 : length(FIGPATH)
-        DATANAME = strcat(FIGPATH(fIndex), "res.mat");
+        Idx = contains(FIGPATH, popRes(fIndex).Date, "IgnoreCase", true);
+        DATANAME = strcat(FIGPATH(Idx), "res.mat");
         load(DATANAME);
         chSPK = chSpikeLfp(1).chSPK;
         
         chIdx = matches(string({chSPK.info}'), string(strsplit(popRes(fIndex).ChSelect, ',')));
         popRes(fIndex).chSpikeLfp = chSpikeLfp;
-        popRes(fIndex).chLFP = chLFP;
-        popRes(fIndex).chCSD = chCSD;
-        popRes(fIndex).chMUA = chMUA;
+        popRes(fIndex).chLFP = structSelect(chAll, ["info", "chLFP"]);
+        popRes(fIndex).rawLFP = structSelect(chAll, ["info", "rawLFP"]);
+        popRes(fIndex).chCSD = structSelect(chAll, ["info", "chCSD"]);
+        popRes(fIndex).chMUA = structSelect(chAll, ["info", "chMUA"]);
         if isempty(popRes(fIndex).ChSelect)
             continue
         end
@@ -63,7 +74,7 @@ for rIndex = 1 : length(protocols)
             [h_ttest, p_ttest] = cellfun(@(x, y) ttest(x, y), countRaw_0, countRaw_1, "UniformOutput", false);
 
             chSpikeLfp(pIndex).chSPK = addFieldToStruct(chSpikeLfp(pIndex).chSPK, ...
-                [cellstr(repmat(Dates(fIndex), sum(chIdx), 1)), ...
+                [cellstr(repmat(Dates(Idx), sum(chIdx), 1)), ...
                 repmat({chSpikeLfp(pIndex).trialsRaw'}, sum(chIdx), 1), ...
                 frMean_1, frSE_1, countRaw_1,frMean_0, frSE_0, countRaw_0, h_ranksum, p_ranksum, h_ttest, p_ttest], ...
                 ["Date"; "trialsRaw"; "frMean_1"; "frSE_1"; "countRaw_1"; "frMean_0"; "frSE_0"; "countRaw_0"; "h_ranksum"; "p_ranksum"; "h_ttest"; "p_ttest"]);

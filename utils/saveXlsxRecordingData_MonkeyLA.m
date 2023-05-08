@@ -9,6 +9,12 @@ animalID = temp{end - 2};
 dateStr = temp{end - 1};
 
 buffer=TDTbin2mat(BLOCKPATH);  %spike store name should be changed according to your real name
+
+%% lfp sample rate patching
+if matches(dateStr, ["cm20230329", "cm20230322"])
+    buffer.streams.Llfp.fs = 2034.5052;
+end
+
 %% try to get epocs
 try
     data.epocs = buffer.epocs;
@@ -41,7 +47,7 @@ catch e
 end
 %% try to get lfp data
 try
-    data.lfp = ECOGResample(buffer.streams.Llfp, 600);
+    data.lfp = ECOGResample(buffer.streams.Llfp, 1000);
 catch e
     disp(e.message);
 end

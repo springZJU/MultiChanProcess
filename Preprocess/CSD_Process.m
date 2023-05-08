@@ -15,10 +15,10 @@ dz = mInputParser.Results.dz;
 %% handle bad channel
     temp = changeCellRowNum(trialsLFP);
     if ~isempty(badCh)
-        if ~ismember(badCh, [1, size(trialsLFP{1}, 1)])
-            temp{badCh, 1} = (temp{badCh - 1} + temp{badCh + 1}) / 2;
-        else
-            temp{badCh, 1} = [];
+        for bIndex = 1 : length(badCh)
+            if ~ismember(badCh(bIndex), [1, size(trialsLFP{1}, 1)])
+                temp{badCh(bIndex), 1} = (temp{badCh(bIndex) - 1} + temp{badCh(bIndex) + 1}) / 2;
+            end
         end
     end
     trialsLFP = changeCellRowNum(temp);

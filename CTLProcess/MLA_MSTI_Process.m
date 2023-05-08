@@ -1,7 +1,7 @@
 function MLA_MSTI_Process(MATPATH, FIGPATH)
 %% Parameter setting
 params.processFcn = @PassiveProcess_clickTrainContinuous;
-fd = 500;
+fd = 600;
 temp = string(strsplit(MATPATH, "\"));
 dateStr = temp(end - 1);
 protStr = temp(end - 2);
@@ -40,7 +40,7 @@ trialAll(1) = [];
 
 %% split data
 [trialsLFPRaw, ~, ~] = selectEcog(lfpDataset, trialAll, "dev onset", Window); % "dev onset"; "trial onset"
-trialsLFPFiltered = ECOGFilter(trialsLFPRaw, 0.1, 1000, fd);
+trialsLFPFiltered = ECOGFilter(trialsLFPRaw, 0.1, 100, fd);
 [trialsLFPFiltered, ~, idx] = excludeTrialsChs(trialsLFPFiltered, 0.04);
 trialAllRaw = trialAll;
 trialAll = trialAll(idx);
@@ -51,11 +51,9 @@ else
 end
 trialsWAVE = selectEcog(WAVEDataset, trialAll, "dev onset", Window);
 
-% spike
-psthPara.binsize = 10; % ms
-psthPara.binstep = 4; % ms
+
 chSelect = [spikeDataset.realCh]';
-trialsSpike = selectSpike(spikeDataset, trialAllRaw, psthPara, MSTIParams, "dev onset");
+trialsSpike = selectSpike(spikeDataset, trialAllRaw, MSTIParams, "dev onset");
 
 % initialize
 t = linspace(Window(1), Window(2), size(trialsLFPFiltered{1}, 2))';
@@ -84,11 +82,11 @@ for dIndex = 1:length(devType)
     chMean{dIndex, 1} = cell2mat(cellfun(@mean , changeCellRowNum(trialsLFP), 'UniformOutput', false));
 
     if ~Exist_CSD_MUA
-    % CSD
-    [badCh, dz] = MLA_CSD_Config(MATPATH);
-    CSD = CSD_Process(trialsLFP, Window, "kCSD", badCh, dz);
-    % MUA
-    MUA = MUA_Process(trialsWave, Window, selWin, WAVEDataset.fs);
+        % CSD
+        [badCh, dz] = MLA_CSD_Config(MATPATH);
+        CSD = CSD_Process(trialsLFP, Window, "kCSD", badCh, dz);
+        % MUA
+        MUA = MUA_Process(trialsWave, Window, selWin, WAVEDataset.fs);
     else
         CSD = [];
         MUA = [];
@@ -101,6 +99,9 @@ for dIndex = 1:length(devType)
 
     %% spike
     spikePlot = cellfun(@(x) cell2mat(x), num2cell(struct2cell(trialsSPK)', 1), "UniformOutput", false);
+    % spike
+    psthPara.binsize = 30; % ms
+    psthPara.binstep = 1; % ms
     chPSTH = cellfun(@(x) calPsth(x(:, 1), psthPara, 1e3, 'EDGE', Window, 'NTRIAL', sum(tIndex)), spikePlot, "uni", false);
     chStr = fields(trialsSPK)';
     chSPK = cell2struct([chStr; spikePlot; chPSTH], ["info", "spikePlot", "PSTH"]);

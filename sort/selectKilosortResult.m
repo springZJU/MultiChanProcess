@@ -1,7 +1,7 @@
 clear; clc
-TANKPATH = 'G:\ECoG\DDZ\ddz20221227';
+% TANKPATH = 'G:\ECoG\DDZ\ddz20221227';
 % TANKPATH = 'G:\ECoG\DD\dd20221130';
-
+TANKPATH = 'G:\ECoG\CM\cm20230406';
 
 %% 
 MERGEPATH = check_mkdir(TANKPATH,'Merge1'); 
@@ -10,8 +10,9 @@ chAll = 16;
 fs = 12207.031250;
 
 NPYPATH = fullfile(MERGEPATH, 'th7_6'); % the path including ks_result
-ch =  [1, 3, 5, 7]; % channels index of kilosort, that means chKs = chTDT - 1;
-idx = [0, 1, 2, 3]; % the corresponding id
+ch = [9, 11, 12, 13, 1013]; % channels index of kilosort, that means chKs = chTDT - 1;
+idx = [7, 9, 8, 11, 10]; % t he corresponding id
+
 
 kiloSpikeAll = cell(max([chAll ch]),1);
 
@@ -72,6 +73,8 @@ if contains(TANKPATH, "DDZ")
     recordPath = "..\utils\MLA_New_DDZ_Recording.xlsx";
 elseif contains(TANKPATH, "DD")
     recordPath = "..\utils\MLA_New_DD_Recording.xlsx";
+elseif contains(TANKPATH, "CM")
+    recordPath = "..\utils\MLA_New_CM_Recording.xlsx";
 end
 recordInfo = table2struct(readtable(recordPath));
 changeIdx = find(matches({recordInfo.BLOCKPATH}', BLOCKPATH'));
